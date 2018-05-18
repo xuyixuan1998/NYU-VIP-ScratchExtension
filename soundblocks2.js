@@ -143,6 +143,7 @@
         var scale = [0, 2, 4, 5, 7, 9, 11];
         var chordOct = 4;
         var noteOct = 5;
+        var lastTime = 0;
 
         function noteToNum(note) {
 
@@ -306,7 +307,7 @@
             for (var i = 0; i < 3; i++) {
 
                 var noteAndTime = {
-                    time: 0,
+                    time: lastTime,
                     note: notes[i] + (12 * chordOct)
                 };
 
@@ -323,13 +324,17 @@
             for (var i = 0; i < 3; i++) {
 
                 var noteAndTime = {
-                    time: t,
+                    time: lastTime,
                     note: notes[i] + (12 * chordOct)
                 };
 
                 sched.push(noteAndTime);
+
             }
+            lastTime += t;
         };
+
+
 
         ext.playScary = function () {
             var root = 0;
@@ -443,43 +448,50 @@
         ext.playMidi = function (note) {
 
             var noteAndTime = {
-                time: 0,
+                time: lastTime,
                 note: note
             };
 
             sched.push(noteAndTime);
+            //            lastTime+
         };
 
 
-
-        ext.playMidiWait = function (t, n) {
+        ext.playMidiAndWait = function (n, t) {
+            var time = 0;
+            time = parseFloat(t);
 
             var noteAndTime = {
-                time: t,
+                time: lastTime,
                 note: n
             };
             sched.push(noteAndTime);
+            lastTime += time;
+
         };
 
 
         ext.playNote = function (note) {
-
+            var n = noteToNum(note);
             var noteAndTime = {
-                time: 0,
-                note: note
+                time: lastTime,
+                note: n + (12 * noteOct)
             };
             sched.push(noteAndTime);
         };
 
 
 
-        ext.playNoteWait = function (t, n) {
-
+        ext.playNoteWait = function (note, t) {
+            var time = 0;
+            time = parseFloat(t);
+            var n = noteToNum(note);
             var noteAndTime = {
-                time: t,
-                note: n
+                time: lastTime,
+                note: n + (12 * noteOct)
             };
             sched.push(noteAndTime);
+            lastTime += time;
         };
 
         ext.wait_random = function (callback) {
@@ -493,16 +505,33 @@
         };
 
 
-        ext.master = function (callback) {
-            var max = 0;
+        ext.master1 = function (callback) {
 
-            for (var i = 0; i < sched.length; i++) {
-                var currentTime = sched[i].time;
-                if (currentTime > max) max = currentTime;
-            }
+            totalTime = lastTime * 1000;
+            //            else totalTime=lastTime*100;
 
-            totalTime += ((max * 1000) + 1000);
-            console.log("time = " + totalTime);
+
+            Soundfont.instrument(ac, instrument).then(function (piano) {
+                piano.schedule(ac.currentTime, sched)
+
+            });
+
+            console.log(sched);
+
+            window.setTimeout(function () {
+                reset();
+            }, totalTime);
+
+            window.setTimeout(function () {
+                callback();
+            }, totalTime);
+
+        };
+
+        ext.master2 = function (callback) {
+
+            totalTime = lastTime * 1000;
+            //            else totalTime=lastTime*100;
 
 
             Soundfont.instrument(ac, instrument).then(function (piano) {
@@ -524,15 +553,23 @@
 
 
         function reset() {
+            //            lastTime=0;
             sched = [];
             console.log("...finished");
             totalTime = 0;
+            lastTime = 0;
         }
 
         ext.reset = function () {
             sched = [];
+            lastTime = 0;
 
         };
+
+        ext.reset2 = function () {
+            lastTime = 0;
+        };
+
 
         ext.test = function () {
             var obj = {
@@ -552,22 +589,25 @@
 
 
 				[' ', 'play %m.q chord with root %m.root', 'playChord', 'maj', 'C'],
-                [' ', 'wait %n sec and play %m.q chord with root %m.root', 'playChordWait', 1, 'maj', 'C'],
+                [' ', 'play %m.q chord with the root %m.root and wait %n sec', 'playChordWait', 'maj', 'C', 1],
 //                [' ', 'play the %m.scaleDeg note in a %m.root %m.scaleQ scale', 'playMel', 'root', 'C', 'maj'],
-//                [' ', ' play %m.root','playNote'],
+                [' ', 'play %m.root', 'playNote', 'C'],
+                [' ', 'play %m.root and wait %n sec', 'playNoteWait', 'C', 1],
+                [' ', ' play midi %n and wait %n sec', 'playMidiAndWait', 60, 1],
                 [' ', 'play MIDI note %n', 'playMidi', 60],
-                [' ', 'wait %n sec and play MIDI note %n', 'playMidiWait', 1, 60],
                 [' ', '👻play scary chord👻', 'playScary'],
                 [' ', '🔮play mystical chord🔮', 'playMyst'],
                 [' ', '😥play sad chord😥', 'playSad'],
                 [' ', '😁play happy chord😁', 'playHappy'],
-                [' ', 'test note', 'test'],
                 [' ', 'play the %m.scaleDeg in a scale', 'playMel', 'root'],
                 [' ', 'set octave %n', 'setOct', '4'],
                 [' ', 'set scale %m.root %m.scaleQ', 'setScale', 'C', 'maj'],
                 [' ', 'set instrument %m.instruments', 'setInstrument', 'acoustic_grand_piano'],
                 [' ', 'open groove pizza', 'openGP'],
-                ['w', '🔊speaker🔊', 'master']
+                ['w', 'instrument 1', 'master1'],
+                ['w', 'instrument 2', 'master2'],
+                ['w', 'instrument 3', 'master2'],
+                ['w', 'instrument 4', 'master2']
 
 
 			],
