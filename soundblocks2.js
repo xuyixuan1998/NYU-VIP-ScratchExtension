@@ -140,7 +140,7 @@
 ];
         var instrument = 'acoustic_grand_piano';
         var ac = new AudioContext();
-        var scale = [0, 2, 4, 5, 7, 9, 11];
+        var scale = [0, 2, 4, 5, 7, 9, 11, 12];
         var chordOct = 4;
         var noteOct = 5;
         var lastTime = 0;
@@ -264,7 +264,7 @@
 
         ext.setScale = function (r, q) {
             var root = noteToNum(r);
-            var intervals = [0, 2, 4, 5, 7, 9, 11];
+            var intervals = [0, 2, 4, 5, 7, 9, 11, 12];
             var mod = 0;
             var note;
             if (q == 'min') {
@@ -273,7 +273,7 @@
                 intervals[5] -= 1;
             }
 
-            for (var i = 0; i < 7; i++) {
+            for (var i = 0; i < 8; i++) {
                 scale[i] = root + (intervals[i]);
             }
 
@@ -411,11 +411,10 @@
 
 
         ext.playMel = function (num) {
-
+            var note;
             switch (num) {
                 case 'root':
                     note = scale[0];
-                    console.log('note= ' + note);
                     break;
 
                 case '2nd':
@@ -436,12 +435,62 @@
                 case '7th':
                     note = scale[6];
                     break;
+                case 'octave':
+                    note = scale[7];
+                    break;
 
             }
 
-            Soundfont.instrument(ac, instrument).then(function (mel) {
-                mel.play(note + (12 * noteOct)) //.stop(ac.currentTime + 0.5)
-            })
+            var noteAndTime = {
+                time: lastTime,
+                note: note + (12 * noteOct)
+            };
+            sched.push(noteAndTime);
+
+        };
+
+        ext.playMelWait = function (num, t) {
+            var note;
+            var time = 0;
+            time = parseFloat(t);
+
+            switch (num) {
+                case 'root':
+                    note = scale[0];
+                    break;
+
+                case '2nd':
+                    note = scale[1];
+                    break;
+                case '3rd':
+                    note = scale[2];
+                    break;
+                case '4th':
+                    note = scale[3];
+                    break;
+                case '5th':
+                    note = scale[4];
+                    break;
+                case '6th':
+                    note = scale[5];
+                    break;
+                case '7th':
+                    note = scale[6];
+                    break;
+                case 'octave':
+                    note = scale[7];
+                    break;
+
+            }
+            console.log(note);
+            var noteAndTime = {
+                time: lastTime,
+                note: note + (12 * noteOct)
+            };
+            sched.push(noteAndTime);
+            lastTime += time;
+
+
         };
 
 
@@ -469,6 +518,20 @@
             lastTime += time;
 
         };
+        
+        ext.playMidiAndWaitChan = function (n, t, c) {
+            var time = 0;
+            time = parseFloat(t);
+
+            var noteAndTime = {
+                time: lastTime,
+                note: n
+            };
+            sched.push(noteAndTime);
+            lastTime += time;
+
+        };
+
 
 
         ext.playNote = function (note) {
@@ -560,26 +623,6 @@
             lastTime = 0;
         }
 
-        ext.reset = function () {
-            sched = [];
-            lastTime = 0;
-
-        };
-
-        ext.reset2 = function () {
-            lastTime = 0;
-        };
-
-
-        ext.test = function () {
-            var obj = {
-                gain: 2
-            };
-            Soundfont.instrument(ac, instrument).then(function (piano) {
-                piano.play(60)
-
-            });
-        };
 
 
 
@@ -590,7 +633,7 @@
 
 				[' ', 'play %m.q chord with root %m.root', 'playChord', 'maj', 'C'],
                 [' ', 'play %m.q chord with the root %m.root and wait %n sec', 'playChordWait', 'maj', 'C', 1],
-//                [' ', 'play the %m.scaleDeg note in a %m.root %m.scaleQ scale', 'playMel', 'root', 'C', 'maj'],
+
                 [' ', 'play %m.root', 'playNote', 'C'],
                 [' ', 'play %m.root and wait %n sec', 'playNoteWait', 'C', 1],
                 [' ', ' play midi %n and wait %n sec', 'playMidiAndWait', 60, 1],
@@ -600,6 +643,7 @@
                 [' ', '😥play sad chord😥', 'playSad'],
                 [' ', '😁play happy chord😁', 'playHappy'],
                 [' ', 'play the %m.scaleDeg in a scale', 'playMel', 'root'],
+                [' ', 'play the %m.scaleDeg in a scale and wait %n sec', 'playMelWait', 'root', 1],
                 [' ', 'set octave %n', 'setOct', '4'],
                 [' ', 'set scale %m.root %m.scaleQ', 'setScale', 'C', 'maj'],
                 [' ', 'set instrument %m.instruments', 'setInstrument', 'acoustic_grand_piano'],
@@ -613,13 +657,13 @@
 			],
             menus: {
                 scaleQ: ['maj', 'min'],
-                scaleDeg: ['root', '2nd', '3rd', '4th', '5th', '6th', '7th'],
+                scaleDeg: ['root', '2nd', '3rd', '4th', '5th', '6th', '7th', 'octave'],
                 root: ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'],
                 q: ['maj', 'min', 'dim', 'aug'],
                 instruments: instrumentList,
             }
         };
 
-        ScratchExtensions.register('MusEd Lab', descriptor, ext);
+        ScratchExtensions.register('MusEDLab', descriptor, ext);
     };
 })({});
