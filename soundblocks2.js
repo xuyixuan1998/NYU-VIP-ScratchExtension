@@ -144,9 +144,11 @@
         var chordOct = 4;
         var noteOct = 5;
         var lastTime = 0;
-        var totalNotes=0;
-        var duration=.2;
-        
+        var totalNotes = 0;
+        var duration = .2;
+        var tempo = 120;
+        var beatTime = 60 / tempo;
+
         function noteToNum(note) {
 
 
@@ -278,9 +280,6 @@
             for (var i = 0; i < 8; i++) {
                 scale[i] = root + (intervals[i]);
             }
-
-
-
         };
 
         ext.openGP = function () {
@@ -334,7 +333,7 @@
 
             }
             lastTime += t;
-            totalNotes+=3;
+            totalNotes += 3;
         };
 
 
@@ -514,10 +513,10 @@
         ext.playMidiAndWait = function (n, t) {
             var time = 0;
             time = parseFloat(t);
-            
+
             var noteAndTime = {
                 time: lastTime,
-                note: n, 
+                note: n,
                 dur: duration
             };
             sched.push(noteAndTime);
@@ -527,9 +526,10 @@
 
         };
 
-        ext.playMidiAndWaitChan = function (n, t, c) {
+        ext.playMidiAndWaitBeat = function (n, t, c) {
             var time = 0;
             time = parseFloat(t);
+            time = time * beatTime;
 
             var noteAndTime = {
                 time: lastTime,
@@ -538,7 +538,8 @@
             };
             sched.push(noteAndTime);
             lastTime += time;
-
+            console.log(lastTime);
+            totalNotes++;
         };
 
 
@@ -557,14 +558,32 @@
 
         ext.playNoteWait = function (note, t) {
             var time = 0;
-            time = parseFloat(t);
             var n = noteToNum(note);
+            time = parseFloat(t);
             var noteAndTime = {
                 time: lastTime,
-                note: n + (12 * noteOct)
+                note: n + (12 * noteOct),
+                dur: duration
             };
             sched.push(noteAndTime);
             lastTime += time;
+        };
+
+        ext.playNoteWaitBeat = function (note, t) {
+            var time = 0;
+            time = parseFloat(t);
+            var n = noteToNum(note);
+            time = time * beatTime;
+
+            var noteAndTime = {
+                time: lastTime,
+                note: n + (12 * noteOct),
+                dur: duration
+            };
+            console.log(noteAndTime.note);
+            sched.push(noteAndTime);
+            lastTime += time;
+            totalNotes++;
         };
 
         ext.wait_random = function (callback) {
@@ -580,25 +599,19 @@
 
         ext.master1 = function (callback) {
             var currentNote;
-            var now=ac.currentTime;
-            console.log('now = '+now)
+            var now = ac.currentTime;
             totalTime = lastTime * 1000;
-            //            else totalTime=lastTime*100;
-            console.log('total time = '+totalTime);
-
-//            Soundfont.instrument(ac, instrument).then(function (piano) {
-//                piano.schedule(ac.currentTime, sched)
-//
-//            });
-            console.log("number of notes = "+totalNotes);
-            
+            console.log("number of notes = " + totalNotes);
             Soundfont.instrument(ac, instrument).then(function (piano) {
                 for (var i = 0; i < totalNotes; i++) {
-                    currentNote=sched.pop();
-                    piano.play(currentNote.note, ac.currentTime+currentNote.time, { duration: currentNote.dur})}
+                    currentNote = sched.pop();
+                    piano.play(currentNote.note, ac.currentTime + currentNote.time, {
+                        duration: currentNote.dur
+                    })
+                }
             })
 
-            console.log(sched);
+//            console.log(sched);
 
             window.setTimeout(function () {
                 reset();
@@ -609,15 +622,18 @@
             }, totalTime);
 
         };
-        
-        ext.setDur=function (t){
-          duration=parseFloat(t);  
+
+        ext.setDur = function (t) {
+            duration = parseFloat(t);
         };
-        
+
         ext.testStop = function (t) {
             Soundfont.instrument(ac, instrument).then(function (piano) {
                 for (var i = 0; i < 5; i++) {
-                    piano.play(60+i, ac.currentTime+i/10, { duration: .1})}
+                    piano.play(60 + i, ac.currentTime + i / 10, {
+                        duration: .1
+                    })
+                }
             })
 
 
@@ -630,8 +646,14 @@
             console.log("...finished");
             totalTime = 0;
             lastTime = 0;
-            totalNotes=0;
+            totalNotes = 0;
         }
+
+        ext.setTempo = function (t) {
+            tempo = t;
+            beatTime = 60 / tempo;
+
+        };
 
 
 
@@ -646,7 +668,9 @@
 
                 [' ', 'play %m.root', 'playNote', 'C'],
                 [' ', 'play %m.root and wait %n sec', 'playNoteWait', 'C', 1],
-                [' ', ' play midi %n and wait %n sec', 'playMidiAndWait', 60, 1],
+                [' ', 'play %m.root and wait %n beats', 'playNoteWaitBeat','C',1],
+                [' ', 'play midi %n and wait %n sec', 'playMidiAndWait', 60, 1],
+                [' ', 'play midi note %n and wait %n beats', 'playMidiAndWaitBeat', 60, 1],
                 [' ', 'play MIDI note %n', 'playMidi', 60],
                 [' ', '👻play scary chord👻', 'playScary'],
                 [' ', '🔮play mystical chord🔮', 'playMyst'],
@@ -658,9 +682,10 @@
                 [' ', 'set scale %m.root %m.scaleQ', 'setScale', 'C', 'maj'],
                 [' ', 'set instrument %m.instruments', 'setInstrument', 'acoustic_grand_piano'],
                 [' ', 'open groove pizza', 'openGP'],
-                [' ', 'set note duration to %n sec','setDur',3],
+                [' ', 'set note duration to %n sec', 'setDur', 3],
                 ['w', 'speaker', 'master1'],
-                [' ', 'test block %n', 'testStop']
+                [' ', 'test block %n', 'testStop'],
+                [' ', 'set tempo to %n bpm', 'setTempo', 120]
 
 
 
