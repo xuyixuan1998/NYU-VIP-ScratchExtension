@@ -144,7 +144,9 @@
         var chordOct = 4;
         var noteOct = 5;
         var lastTime = 0;
-
+        var totalNotes=0;
+        var duration=.2;
+        
         function noteToNum(note) {
 
 
@@ -332,6 +334,7 @@
 
             }
             lastTime += t;
+            totalNotes+=3;
         };
 
 
@@ -443,7 +446,8 @@
 
             var noteAndTime = {
                 time: lastTime,
-                note: note + (12 * noteOct)
+                note: note + (12 * noteOct),
+                dur: duration
             };
             sched.push(noteAndTime);
 
@@ -485,7 +489,8 @@
             console.log(note);
             var noteAndTime = {
                 time: lastTime,
-                note: note + (12 * noteOct)
+                note: note + (12 * noteOct),
+                dur: duration
             };
             sched.push(noteAndTime);
             lastTime += time;
@@ -498,34 +503,38 @@
 
             var noteAndTime = {
                 time: lastTime,
-                note: note
+                note: note,
+                dur: duration
             };
 
             sched.push(noteAndTime);
-            //            lastTime+
         };
 
 
         ext.playMidiAndWait = function (n, t) {
             var time = 0;
             time = parseFloat(t);
-
+            
             var noteAndTime = {
                 time: lastTime,
-                note: n
+                note: n, 
+                dur: duration
             };
             sched.push(noteAndTime);
             lastTime += time;
+            console.log(lastTime);
+            totalNotes++;
 
         };
-        
+
         ext.playMidiAndWaitChan = function (n, t, c) {
             var time = 0;
             time = parseFloat(t);
 
             var noteAndTime = {
                 time: lastTime,
-                note: n
+                note: n,
+                dur: duration
             };
             sched.push(noteAndTime);
             lastTime += time;
@@ -538,7 +547,8 @@
             var n = noteToNum(note);
             var noteAndTime = {
                 time: lastTime,
-                note: n + (12 * noteOct)
+                note: n + (12 * noteOct),
+                dur: duration
             };
             sched.push(noteAndTime);
         };
@@ -569,15 +579,24 @@
 
 
         ext.master1 = function (callback) {
-
+            var currentNote;
+            var now=ac.currentTime;
+            console.log('now = '+now)
             totalTime = lastTime * 1000;
             //            else totalTime=lastTime*100;
+            console.log('total time = '+totalTime);
 
-
+//            Soundfont.instrument(ac, instrument).then(function (piano) {
+//                piano.schedule(ac.currentTime, sched)
+//
+//            });
+            console.log("number of notes = "+totalNotes);
+            
             Soundfont.instrument(ac, instrument).then(function (piano) {
-                piano.schedule(ac.currentTime, sched)
-
-            });
+                for (var i = 0; i < totalNotes; i++) {
+                    currentNote=sched.pop();
+                    piano.play(currentNote.note, ac.currentTime+currentNote.time, { duration: currentNote.dur})}
+            })
 
             console.log(sched);
 
@@ -590,27 +609,17 @@
             }, totalTime);
 
         };
-
-        ext.master2 = function (callback) {
-
-            totalTime = lastTime * 1000;
-            //            else totalTime=lastTime*100;
-
-
+        
+        ext.setDur=function (t){
+          duration=parseFloat(t);  
+        };
+        
+        ext.testStop = function (t) {
             Soundfont.instrument(ac, instrument).then(function (piano) {
-                piano.schedule(ac.currentTime, sched)
+                for (var i = 0; i < 5; i++) {
+                    piano.play(60+i, ac.currentTime+i/10, { duration: .1})}
+            })
 
-            });
-
-            console.log(sched);
-
-            window.setTimeout(function () {
-                reset();
-            }, totalTime);
-
-            window.setTimeout(function () {
-                callback();
-            }, totalTime);
 
         };
 
@@ -621,6 +630,7 @@
             console.log("...finished");
             totalTime = 0;
             lastTime = 0;
+            totalNotes=0;
         }
 
 
@@ -648,10 +658,10 @@
                 [' ', 'set scale %m.root %m.scaleQ', 'setScale', 'C', 'maj'],
                 [' ', 'set instrument %m.instruments', 'setInstrument', 'acoustic_grand_piano'],
                 [' ', 'open groove pizza', 'openGP'],
-                ['w', 'instrument 1', 'master1'],
-                ['w', 'instrument 2', 'master2'],
-                ['w', 'instrument 3', 'master2'],
-                ['w', 'instrument 4', 'master2']
+                [' ', 'set note duration to %n sec','setDur',3],
+                ['w', 'speaker', 'master1'],
+                [' ', 'test block %n', 'testStop']
+
 
 
 			],
