@@ -81,11 +81,22 @@
 
 
         });
+        
+        var inst2 = new Tone.Sampler({
+            C4: 'https://qscacheri.github.io/Sound-Samples/MusyngKite/drum-kit/kick_1.wav',
+            D4: 'https://qscacheri.github.io/Sound-Samples/MusyngKite/drum-kit/snare_1.wav',
+            E4: 'https://qscacheri.github.io/Sound-Samples/MusyngKite/drum-kit/closed%20hh_1.wav',
+            F4: 'https://qscacheri.github.io/Sound-Samples/MusyngKite/drum-kit/open%20hh_1.wav'
+            
+            
+        });
 
         Tone.Buffer.on('load', function () {
             console.log('...done');
             sampler.sync();
             sampler.toMaster();
+            inst2.sync();
+            inst2.toMaster();
 
 
         })
@@ -133,25 +144,25 @@
 
             if (note == "C")
                 noteNum = 0;
-            else if (note == "C#/Db")
+            else if (note == "Db")
                 noteNum = 1;
             else if (note == "D")
                 noteNum = 2;
-            else if (note == "D#/Eb")
+            else if (note == "Eb")
                 noteNum = 3;
             else if (note == "E")
                 noteNum = 4;
             else if (note == "F")
                 noteNum = 5;
-            else if (note == "F#/Gb")
+            else if (note == "Gb")
                 noteNum = 6;
             else if (note == "G")
                 noteNum = 7;
-            else if (note == "G#/Ab")
+            else if (note == "Ab")
                 noteNum = 8;
             else if (note == "A")
                 noteNum = 9;
-            else if (note == "A#/Bb")
+            else if (note == "Bb")
                 noteNum = 10;
             else if (note == "B")
                 noteNum = 11;
@@ -347,15 +358,26 @@
 
             console.log(totalNotes);
             var time;
+            inst2.volume.value = -6;
             for (var i = 0; i < totalNotes; i++) {
-
+                
                 time = convertBeat(sched[i].beats)
                 console.log(sched[i].note + 'note');
                 console.log(time + '=time');
                 console.log(sched);
                 sampler.triggerAttackRelease(sched[i].note, noteDuration, time);
+//                inst2.triggerAttackRelease('C4','4n','0:0:0');
+//                inst2.triggerAttackRelease('D4','4n','0:1:0');
+//                inst2.triggerAttackRelease('C4','4n','0:2:0');
+//                inst2.triggerAttackRelease('D4','4n','0:3:0');
+//                inst2.triggerAttackRelease('E4','4n', '0:0:0');
+//                inst2.triggerAttackRelease('E4','4n', '0:0:2');
+//                inst2.triggerAttackRelease('E4','4n', '0:0:4');
+//                inst2.triggerAttackRelease('E4','4n', '0:0:8');
 
             }
+            
+            
 
             console.log(convertBeat(lastTime));
 
@@ -382,7 +404,7 @@
                 [' ', 'play chord %s %m.qualities for %n beat(s)', 'playChordForBeats', 'C', 'major', 1],
                 [' ', 'set loop on', 'loopOn'],
                 [' ', 'set loop off', 'loopOff'],
-                [' ', '🔊speaker🔊', 'speakerOut'],
+                [' ', '🔊instrument 1 out🔊', 'speakerOut'],
                 [' ', 'set octave to %n', 'setOctave', 4],
                 [' ', 'set duration %m.beatval ', 'setDuration', '1/4 note']
             ],
