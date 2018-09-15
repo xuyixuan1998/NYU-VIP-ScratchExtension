@@ -175,6 +175,70 @@
             return (m + ':' + b + ':' + s);
         }
 
+        function findThird(root, q) {
+                        console.log(q + "quality");
+            var mod;
+            if (q == ("major")) {
+                mod = 0;
+            } else if (q == ("minor")) {
+                mod = -1;
+            } else if (q == ("diminished")) {
+                mod = -1;
+            } else if (q == ("augmented")) {
+                mod = 0;
+            }
+
+            return (root + 4 + mod);
+        }
+
+
+
+        function findFifth(root, q) {
+            var mod;
+            if (q == ("major")) {
+                mod = 0;
+            } else if (q == ("minor")) {
+                mod = 0;
+            } else if (q == ("diminished")) {
+                mod = -1;
+            } else if (q == ("augmented")) {
+                mod = 1;
+            }
+
+            return (root + mod + 7);
+        }
+
+        ext.playChordForBeats = function(r,q,b) {
+//
+            var root = noteToNum(r);
+            var notes = [];
+            notes[0] = root+(12*(octave+1));
+            notes[1] = findThird(root, q)+(12*(octave+1));
+            notes[2] = findFifth(root, q)+(12*(octave+1));
+            var noteAndTime;
+            console.log("root = "+notes[0]);
+            console.log("third = "+notes[1]);
+            console.log("fifth = "+notes[2]);
+            //
+            console.log('asdf');
+            for (var i = 0; i < 3; i++) {
+                noteAndTime = {
+                    note: Tone.Frequency(notes[i], "midi").toNote(),
+                    beats: lastTime
+                };
+                console.log(noteAndTime.note+" = note");
+
+                sched.push(noteAndTime);
+                console.log(noteAndTime.note);
+            }
+            lastTime += b;
+            console.log ("last time at method = "+lastTime);
+            totalNotes += 3;
+
+
+
+        };
+
 
         // Cleanup function when the extension is unloaded
         ext._shutdown = function () {};
@@ -189,7 +253,18 @@
 
 
 
-        ext.playNote = function (n, beats) {
+        ext.playNote = function (n) {
+            noteAndTime = {
+                note: n + "" + octave,
+                beats: lastTime
+            };
+
+            sched.push(noteAndTime);
+            totalNotes++;
+        };
+
+
+        ext.playNoteForBeats = function (n, beats) {
 
             noteAndTime = {
                 note: n + "" + octave,
@@ -220,10 +295,10 @@
         ext.setOctave = function (n) {
             octave = n;
         };
-        
-        ext.setDuration = function (v){
-            switch(v){
-                case '1/2 note': 
+
+        ext.setDuration = function (v) {
+            switch (v) {
+                case '1/2 note':
                     noteDuration = '2n';
                     break;
                 case '1/4 note':
@@ -265,27 +340,31 @@
                 Tone.Transport.schedule(function (time) {
                     totalNotes = 0;
                     sched = [];
+                    console.log('reset: '+lastTime);
                     lastTime = 0;
-                    console.log('reset');
+                    
                     Tone.Transport.stop();
                     Tone.Transport.cancel();
                 }, convertBeat(lastTime));
             };
         }
 
-       
+
         // Block and block menu descriptions
         var descriptor = {
             blocks: [
-                [' ', 'play note %s for %n beat(s)', 'playNote', 'C', 1],
+                [' ', 'play note %s', ],
+                [' ', 'play note %s for %n beat(s)', 'playNoteForBeats', 'C', 1],
+                [' ', 'play chord %s %m.qualities for %n beat(s)','playChordForBeats', 'C','major',1],
                 [' ', 'set loop on', 'loopOn'],
                 [' ', 'set loop off', 'loopOff'],
                 [' ', '🔊speaker🔊', 'speakerOut'],
                 [' ', 'set octave to %n', 'setOctave', 4],
-                [' ', 'set duration %m.beatval ','setDuration','1/4 note']
+                [' ', 'set duration %m.beatval ', 'setDuration', '1/4 note']
             ],
             menus: {
-                beatval: ['1/2 note', '1/4 note', '1/8 note', '1/16 note ']
+                beatval: ['1/2 note', '1/4 note', '1/8 note', '1/16 note '],
+                qualities: ['major','minor','diminished','augmented']
             }
         };
         // Register the extension
