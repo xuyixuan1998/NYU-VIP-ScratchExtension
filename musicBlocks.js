@@ -6,11 +6,12 @@
         var lastTime = 0;
         var loop = false;
         var totalNotes = 0;
+        var samplers = [];
         var measure = 0;
         var sched = [];
         var octave = 4;
         var noteDuration = '4n'
-        var currentInst = "banjo"
+        var currentInst = "acoustic_grand_piano"
         //        var baseUrl = "https://qscacheri.github.io/Sound-Samples/MusyngKite/acoustic_grand_piano-mp3/"
         var baseUrl = "https://qscacheri.github.io/Sound-Samples/MusyngKite/"
 
@@ -230,7 +231,7 @@
 
 
         }
-        
+
         loadSamples();
 
         var inst2 = new Tone.Sampler({
@@ -242,19 +243,56 @@
 
         });
 
+        //        samplers.push(inst2);
+
+        for (var i = 0; i < 50; i++) {
+            samplers.push(new Tone.Sampler({
+
+                "C4": baseUrl + instrumentList[i] + "-mp3/" + "C4.mp3",
+                "Db4": baseUrl + instrumentList[i] + "-mp3/" + "Db4.mp3",
+                "D4": baseUrl + instrumentList[i] + "-mp3/" + "D4.mp3",
+                "Eb4": baseUrl + instrumentList[i] + "-mp3/" + "Eb4.mp3",
+                "E4": baseUrl + instrumentList[i] + "-mp3/" + "E4.mp3",
+                "F4": baseUrl + instrumentList[i] + "-mp3/" + "F4.mp3",
+                "Gb4": baseUrl + instrumentList[i] + "-mp3/" + "Gb4.mp3",
+                "G4": baseUrl + instrumentList[i] + "-mp3/" + "G4.mp3",
+                "Ab4": baseUrl + instrumentList[i] + "-mp3/" + "Ab4.mp3",
+                "A4": baseUrl + instrumentList[i] + "-mp3/" + "A4.mp3",
+                "Bb4": baseUrl + instrumentList[i] + "-mp3/" + "Bb4.mp3",
+                "B4": baseUrl + instrumentList[i] + "-mp3/" + "B4.mp3"
+
+
+            }))
+        }
+
+
+
+
+
+
+
+        alert("One sec, loading your instruments!");
+
+
         Tone.Buffer.on('load', function () {
+            alert("Done!");
+
             console.log('...done');
             sampler.sync();
             sampler.toMaster();
             inst2.sync();
             inst2.toMaster();
+            for (var i = 0; i < 50; i++) {
+                samplers[i].sync();
+                samplers[i].toMaster();
+
+
+            }
 
 
         })
 
-        Tone.Buffer.on('progress', function () {
-            //            console.log('loading...');
-        })
+        Tone.Buffer.on('progress', function () {})
 
         Tone.Buffer.on('error', function () {
             console.log('error');
@@ -471,6 +509,7 @@
 
         ext.loopOff = function () {
             loop = false;
+            sched = [];
             console.log("loop is off");
             Tone.Transport.loop = false;
             Tone.Transport.stop();
@@ -505,7 +544,7 @@
 
 
         }
-//
+        //
         ext.speakerOut = function () {
             Tone.Transport.start();
 
