@@ -153,8 +153,6 @@
   "woodblock",
   "xylophone"
 ];
-        console.log('url = ' + baseUrl + currentInst + "-mp3/" + "C1.mp3");
-        console.log("index is " + instrumentList.indexOf('acoustic_bass'));
 
         function loadSamples() {
             sampler = new Tone.Sampler({
@@ -418,9 +416,12 @@
             notes[2] = findFifth(root, q) + (12 * (octave + 1));
             var noteAndTime;
             for (var i = 0; i < 3; i++) {
+
                 noteAndTime = {
                     note: Tone.Frequency(notes[i], "midi").toNote(),
-                    beats: lastTime
+                    beats: lastTime,
+                    dur: noteDuration,
+                    inst: instrumentList.indexOf(currentInst)
                 };
                 console.log(noteAndTime.note + " = note");
 
@@ -448,12 +449,14 @@
             for (var i = 0; i < 3; i++) {
                 noteAndTime = {
                     note: Tone.Frequency(notes[i], "midi").toNote(),
-                    beats: lastTime
+                    beats: lastTime,
+                    dur: noteDuration,
+                    inst: instrumentList.indexOf(currentInst)
                 };
-                console.log(noteAndTime.note + " = note");
+                //                console.log(noteAndTime.note + " = note");
 
                 sched.push(noteAndTime);
-                console.log(noteAndTime.note);
+                //                console.log(noteAndTime.note);
             }
             lastTime += b;
             console.log("last time at method = " + lastTime);
@@ -478,10 +481,14 @@
 
 
         ext.playNote = function (n) {
+
             noteAndTime = {
                 note: n + "" + octave,
-                beats: lastTime
+                beats: lastTime,
+                dur: noteDuration,
+                inst: instrumentList.indexOf(currentInst)
             };
+
 
             sched.push(noteAndTime);
             totalNotes++;
@@ -543,6 +550,17 @@
             console.log("new inst = " + currentInst);
         }
 
+        ext.clearNotes = function () {
+            totalNotes = 0;
+            sched = [];
+            console.log('reset: ' + lastTime);
+            lastTime = 0;
+            Tone.Transport.stop();
+            Tone.Transport.cancel();
+        };
+
+
+
         ext.speakerOut = function () {
             Tone.Transport.start();
 
@@ -557,24 +575,9 @@
             for (var i = 0; i < totalNotes; i++) {
 
                 time = convertBeat(sched[i].beats)
-                //                console.log(sched[i].note + 'note');
-                //                console.log(time + '=time');
-                //                console.log(sched);
+
                 samplers[sched[i].inst].triggerAttackRelease(sched[i].note, sched[i].dur, time);
-                //                inst2.triggerAttackRelease('C4','4n','0:0:0');
-                //                inst2.triggerAttackRelease('D4','4n','0:1:0');
-                //                inst2.triggerAttackRelease('C4','4n','0:2:0');
-                //                inst2.triggerAttackRelease('D4','4n','0:3:0');
-                //                inst2.triggerAttackRelease('E4','4n', '0:0:0');
-                //                inst2.triggerAttackRelease('E4','4n', '0:0:2');
-                //                inst2.triggerAttackRelease('E4','4n', '0:0:4');
-                //                inst2.triggerAttackRelease('E4','4n', '0:0:8');
-
             }
-
-            //
-
-            //            console.log(convertBeat(lastTime));
 
             if (loop == false) {
                 Tone.Transport.schedule(function (time) {
@@ -582,7 +585,6 @@
                     sched = [];
                     console.log('reset: ' + lastTime);
                     lastTime = 0;
-
                     Tone.Transport.stop();
                     Tone.Transport.cancel();
                 }, convertBeat(lastTime));
@@ -602,7 +604,9 @@
                 [' ', '🔊instrument 1 out🔊', 'speakerOut'],
                 [' ', 'set octave to %n', 'setOctave', 4],
                 [' ', 'set duration %m.beatval ', 'setDuration', ''],
-                [' ', 'load new sound %m.sounds', 'newSound', 'acoustic_grand_piano']
+                [' ', 'load new sound %m.sounds', 'newSound', 'acoustic_grand_piano'],
+                [' ', 'clear notes', 'clearNotes']
+
             ],
             menus: {
                 beatval: ['1/2 note', '1/4 note', '1/8 note', '1/16 note'],
