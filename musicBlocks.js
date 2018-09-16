@@ -8,7 +8,7 @@
         var loop = false;
         var totalNotes = 0;
         var samplers = [];
-        var measure = 0;
+        var maxMeasure = 0;
         var sched = [];
         var octave = 4;
         var noteDuration = '4n'
@@ -275,7 +275,7 @@
         Tone.Buffer.on('progress', function () {})
 
         Tone.Buffer.on('error', function () {
-            console.log('error');
+//            console.log('error');
         })
 
 
@@ -545,8 +545,17 @@
 
         ext.speakerOut = function () {
             Tone.Transport.start();
-
-            Tone.Transport.setLoopPoints(0, "1:0:0");
+            if (lastTime%4 == 0){
+                maxMeasure = lastTime/4;
+            }
+            else {
+                maxMeasure = (Math.floor(lastTime/4)+1);
+            }
+            
+            console.log('max measure = '+maxMeasure);
+            
+            
+            Tone.Transport.setLoopPoints(0, maxMeasure+'m');
             if (loop == true) {
                 Tone.Transport.loop = true;
             } else Tone.Transport.loop = false;
