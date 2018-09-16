@@ -2,6 +2,7 @@
     $.getScript('https://tonejs.github.io/build/Tone.js', start)
 
     function start() {
+        var loaded = false;
         var sampler;
         var lastTime = 0;
         var loop = false;
@@ -154,84 +155,8 @@
   "xylophone"
 ];
 
-        function loadSamples() {
-            sampler = new Tone.Sampler({
-                "C1": baseUrl + currentInst + "-mp3/" + "C1.mp3",
-                "Db1": baseUrl + currentInst + "-mp3/" + "Db1.mp3",
-                "D1": baseUrl + currentInst + "-mp3/" + "D1.mp3",
-                "Eb1": baseUrl + currentInst + "-mp3/" + "Eb1.mp3",
-                "E1": baseUrl + currentInst + "-mp3/" + "E1.mp3",
-                "F1": baseUrl + currentInst + "-mp3/" + "F1.mp3",
-                "Gb1": baseUrl + currentInst + "-mp3/" + "Gb1.mp3",
-                "G1": baseUrl + currentInst + "-mp3/" + "G1.mp3",
-                "Ab1": baseUrl + currentInst + "-mp3/" + "Ab1.mp3",
-                "A1": baseUrl + currentInst + "-mp3/" + "A1.mp3",
-                "Bb1": baseUrl + currentInst + "-mp3/" + "Bb1.mp3",
-                "B1": baseUrl + currentInst + "-mp3/" + "B1.mp3",
 
-                "C2": baseUrl + currentInst + "-mp3/" + "C2.mp3",
-                "Db2": baseUrl + currentInst + "-mp3/" + "Db2.mp3",
-                "D2": baseUrl + currentInst + "-mp3/" + "D2.mp3",
-                "Eb2": baseUrl + currentInst + "-mp3/" + "Eb2.mp3",
-                "E2": baseUrl + currentInst + "-mp3/" + "E2.mp3",
-                "F2": baseUrl + currentInst + "-mp3/" + "F2.mp3",
-                "Gb2": baseUrl + currentInst + "-mp3/" + "Gb2.mp3",
-                "G2": baseUrl + currentInst + "-mp3/" + "G2.mp3",
-                "Ab2": baseUrl + currentInst + "-mp3/" + "Ab2.mp3",
-                "A2": baseUrl + currentInst + "-mp3/" + "A2.mp3",
-                "Bb2": baseUrl + currentInst + "-mp3/" + "Bb2.mp3",
-                "B2": baseUrl + currentInst + "-mp3/" + "B2.mp3",
-
-                "C3": baseUrl + currentInst + "-mp3/" + "C3.mp3",
-                "Db3": baseUrl + currentInst + "-mp3/" + "Db3.mp3",
-                "D3": baseUrl + currentInst + "-mp3/" + "D3.mp3",
-                "Eb3": baseUrl + currentInst + "-mp3/" + "Eb3.mp3",
-                "E3": baseUrl + currentInst + "-mp3/" + "E3.mp3",
-                "F3": baseUrl + currentInst + "-mp3/" + "F3.mp3",
-                "Gb3": baseUrl + currentInst + "-mp3/" + "Gb3.mp3",
-                "G3": baseUrl + currentInst + "-mp3/" + "G3.mp3",
-                "Ab3": baseUrl + currentInst + "-mp3/" + "Ab3.mp3",
-                "A3": baseUrl + currentInst + "-mp3/" + "A3.mp3",
-                "Bb3": baseUrl + currentInst + "-mp3/" + "Bb3.mp3",
-                "B3": baseUrl + currentInst + "-mp3/" + "B3.mp3",
-
-                "C4": baseUrl + currentInst + "-mp3/" + "C4.mp3",
-                "Db4": baseUrl + currentInst + "-mp3/" + "Db4.mp3",
-                "D4": baseUrl + currentInst + "-mp3/" + "D4.mp3",
-                "Eb4": baseUrl + currentInst + "-mp3/" + "Eb4.mp3",
-                "E4": baseUrl + currentInst + "-mp3/" + "E4.mp3",
-                "F4": baseUrl + currentInst + "-mp3/" + "F4.mp3",
-                "Gb4": baseUrl + currentInst + "-mp3/" + "Gb4.mp3",
-                "G4": baseUrl + currentInst + "-mp3/" + "G4.mp3",
-                "Ab4": baseUrl + currentInst + "-mp3/" + "Ab4.mp3",
-                "A4": baseUrl + currentInst + "-mp3/" + "A4.mp3",
-                "Bb4": baseUrl + currentInst + "-mp3/" + "Bb4.mp3",
-                "B4": baseUrl + currentInst + "-mp3/" + "B4.mp3",
-
-                "C5": baseUrl + currentInst + "-mp3/" + "C5.mp3",
-                "Db5": baseUrl + currentInst + "-mp3/" + "Db5.mp3",
-                "D5": baseUrl + currentInst + "-mp3/" + "D5.mp3",
-                "Eb5": baseUrl + currentInst + "-mp3/" + "Eb5.mp3",
-                "E5": baseUrl + currentInst + "-mp3/" + "E5.mp3",
-                "F5": baseUrl + currentInst + "-mp3/" + "F5.mp3",
-                "Gb5": baseUrl + currentInst + "-mp3/" + "Gb5.mp3",
-                "G5": baseUrl + currentInst + "-mp3/" + "G5.mp3",
-                "Ab5": baseUrl + currentInst + "-mp3/" + "Ab5.mp3",
-                "A5": baseUrl + currentInst + "-mp3/" + "A5.mp3",
-                "Bb5": baseUrl + currentInst + "-mp3/" + "Bb5.mp3",
-                "B5": baseUrl + currentInst + "-mp3/" + "B5.mp3"
-
-
-
-
-
-            });
-
-
-
-        }
-
-        loadSamples();
+        //        loadSamples();
 
         var inst2 = new Tone.Sampler({
             C4: 'https://qscacheri.github.io/Sound-Samples/MusyngKite/drum-kit/kick_1.wav',
@@ -242,10 +167,61 @@
 
         });
 
-        //        samplers.push(inst2);
 
         for (var i = 0; i < 50; i++) {
             samplers.push(new Tone.Sampler({
+
+                "C0": baseUrl + instrumentList[i] + "-mp3/" + "C0.mp3",
+                "Db0": baseUrl + instrumentList[i] + "-mp3/" + "Db0.mp3",
+                "D0": baseUrl + instrumentList[i] + "-mp3/" + "D0.mp3",
+                "Eb0": baseUrl + instrumentList[i] + "-mp3/" + "Eb0.mp3",
+                "E0": baseUrl + instrumentList[i] + "-mp3/" + "E0.mp3",
+                "F0": baseUrl + instrumentList[i] + "-mp3/" + "F0.mp3",
+                "Gb0": baseUrl + instrumentList[i] + "-mp3/" + "Gb0.mp3",
+                "G0": baseUrl + instrumentList[i] + "-mp3/" + "G0.mp3",
+                "Ab0": baseUrl + instrumentList[i] + "-mp3/" + "Ab0.mp3",
+                "A0": baseUrl + instrumentList[i] + "-mp3/" + "A0.mp3",
+                "Bb0": baseUrl + instrumentList[i] + "-mp3/" + "Bb0.mp3",
+                "B0": baseUrl + instrumentList[i] + "-mp3/" + "B0.mp3",
+
+                "C1": baseUrl + instrumentList[i] + "-mp3/" + "C1.mp3",
+                "Db1": baseUrl + instrumentList[i] + "-mp3/" + "Db1.mp3",
+                "D1": baseUrl + instrumentList[i] + "-mp3/" + "D1.mp3",
+                "Eb1": baseUrl + instrumentList[i] + "-mp3/" + "Eb1.mp3",
+                "E1": baseUrl + instrumentList[i] + "-mp3/" + "E1.mp3",
+                "F1": baseUrl + instrumentList[i] + "-mp3/" + "F1.mp3",
+                "Gb1": baseUrl + instrumentList[i] + "-mp3/" + "Gb1.mp3",
+                "G1": baseUrl + instrumentList[i] + "-mp3/" + "G1.mp3",
+                "Ab1": baseUrl + instrumentList[i] + "-mp3/" + "Ab1.mp3",
+                "A1": baseUrl + instrumentList[i] + "-mp3/" + "A1.mp3",
+                "Bb1": baseUrl + instrumentList[i] + "-mp3/" + "Bb1.mp3",
+                "B1": baseUrl + instrumentList[i] + "-mp3/" + "B1.mp3",
+
+                "C2": baseUrl + instrumentList[i] + "-mp3/" + "C2.mp3",
+                "Db2": baseUrl + instrumentList[i] + "-mp3/" + "Db2.mp3",
+                "D2": baseUrl + instrumentList[i] + "-mp3/" + "D2.mp3",
+                "Eb2": baseUrl + instrumentList[i] + "-mp3/" + "Eb2.mp3",
+                "E2": baseUrl + instrumentList[i] + "-mp3/" + "E2.mp3",
+                "F2": baseUrl + instrumentList[i] + "-mp3/" + "F2.mp3",
+                "Gb2": baseUrl + instrumentList[i] + "-mp3/" + "Gb2.mp3",
+                "G2": baseUrl + instrumentList[i] + "-mp3/" + "G2.mp3",
+                "Ab2": baseUrl + instrumentList[i] + "-mp3/" + "Ab2.mp3",
+                "A2": baseUrl + instrumentList[i] + "-mp3/" + "A2.mp3",
+                "Bb2": baseUrl + instrumentList[i] + "-mp3/" + "Bb2.mp3",
+                "B2": baseUrl + instrumentList[i] + "-mp3/" + "B2.mp3",
+
+                "C3": baseUrl + instrumentList[i] + "-mp3/" + "C3.mp3",
+                "Db3": baseUrl + instrumentList[i] + "-mp3/" + "Db3.mp3",
+                "D3": baseUrl + instrumentList[i] + "-mp3/" + "D3.mp3",
+                "Eb3": baseUrl + instrumentList[i] + "-mp3/" + "Eb3.mp3",
+                "E3": baseUrl + instrumentList[i] + "-mp3/" + "E3.mp3",
+                "F3": baseUrl + instrumentList[i] + "-mp3/" + "F3.mp3",
+                "Gb3": baseUrl + instrumentList[i] + "-mp3/" + "Gb3.mp3",
+                "G3": baseUrl + instrumentList[i] + "-mp3/" + "G3.mp3",
+                "Ab3": baseUrl + instrumentList[i] + "-mp3/" + "Ab3.mp3",
+                "A3": baseUrl + instrumentList[i] + "-mp3/" + "A3.mp3",
+                "Bb3": baseUrl + instrumentList[i] + "-mp3/" + "Bb3.mp3",
+                "B3": baseUrl + instrumentList[i] + "-mp3/" + "B3.mp3",
 
                 "C4": baseUrl + instrumentList[i] + "-mp3/" + "C4.mp3",
                 "Db4": baseUrl + instrumentList[i] + "-mp3/" + "Db4.mp3",
@@ -258,7 +234,20 @@
                 "Ab4": baseUrl + instrumentList[i] + "-mp3/" + "Ab4.mp3",
                 "A4": baseUrl + instrumentList[i] + "-mp3/" + "A4.mp3",
                 "Bb4": baseUrl + instrumentList[i] + "-mp3/" + "Bb4.mp3",
-                "B4": baseUrl + instrumentList[i] + "-mp3/" + "B4.mp3"
+                "B4": baseUrl + instrumentList[i] + "-mp3/" + "B4.mp3",
+
+//                "C5": baseUrl + instrumentList[i] + "-mp3/" + "C5.mp3",
+//                "Db5": baseUrl + instrumentList[i] + "-mp3/" + "Db5.mp3",
+//                "D5": baseUrl + instrumentList[i] + "-mp3/" + "D5.mp3",
+//                "Eb5": baseUrl + instrumentList[i] + "-mp3/" + "Eb5.mp3",
+//                "E5": baseUrl + instrumentList[i] + "-mp3/" + "E5.mp3",
+//                "F5": baseUrl + instrumentList[i] + "-mp3/" + "F5.mp3",
+//                "Gb5": baseUrl + instrumentList[i] + "-mp3/" + "Gb5.mp3",
+//                "G5": baseUrl + instrumentList[i] + "-mp3/" + "G5.mp3",
+//                "Ab5": baseUrl + instrumentList[i] + "-mp3/" + "Ab5.mp3",
+//                "A5": baseUrl + instrumentList[i] + "-mp3/" + "A5.mp3",
+//                "Bb5": baseUrl + instrumentList[i] + "-mp3/" + "Bb5.mp3",
+//                "B5": baseUrl + instrumentList[i] + "-mp3/" + "B5.mp3"
 
 
             }))
@@ -270,25 +259,17 @@
 
 
 
-        alert("One sec, loading your instruments!");
+//        alert("One sec, loading your instruments!");
 
 
         Tone.Buffer.on('load', function () {
             alert("Done!");
-
+            loaded = true;
             console.log('...done');
-            sampler.sync();
-            sampler.toMaster();
-            inst2.sync();
-            inst2.toMaster();
             for (var i = 0; i < 50; i++) {
                 samplers[i].sync();
                 samplers[i].toMaster();
-
-
             }
-
-
         })
 
         Tone.Buffer.on('progress', function () {})
@@ -408,62 +389,61 @@
         }
 
         ext.playChord = function (r, q) {
-            //
-            var root = noteToNum(r);
-            var notes = [];
-            notes[0] = root + (12 * (octave + 1));
-            notes[1] = findThird(root, q) + (12 * (octave + 1));
-            notes[2] = findFifth(root, q) + (12 * (octave + 1));
-            var noteAndTime;
-            for (var i = 0; i < 3; i++) {
+            if (loaded) {
+                var root = noteToNum(r);
+                var notes = [];
+                notes[0] = root + (12 * (octave + 1));
+                notes[1] = findThird(root, q) + (12 * (octave + 1));
+                notes[2] = findFifth(root, q) + (12 * (octave + 1));
+                var noteAndTime;
+                for (var i = 0; i < 3; i++) {
 
-                noteAndTime = {
-                    note: Tone.Frequency(notes[i], "midi").toNote(),
-                    beats: lastTime,
-                    dur: noteDuration,
-                    inst: instrumentList.indexOf(currentInst)
-                };
-                console.log(noteAndTime.note + " = note");
+                    noteAndTime = {
+                        note: Tone.Frequency(notes[i], "midi").toNote(),
+                        beats: lastTime,
+                        dur: noteDuration,
+                        inst: instrumentList.indexOf(currentInst)
+                    };
+                    console.log(noteAndTime.note + " = note");
 
-                sched.push(noteAndTime);
-                console.log(noteAndTime.note);
-            }
-            console.log("last time at method = " + lastTime);
-            totalNotes += 3;
+                    sched.push(noteAndTime);
+                    console.log(noteAndTime.note);
+                }
+                console.log("last time at method = " + lastTime);
+                totalNotes += 3;
+            } else alert("Not so fast eager McBeaver!");
 
         };
 
         ext.playChordForBeats = function (r, q, b) {
-            //
-            var root = noteToNum(r);
-            var notes = [];
-            notes[0] = root + (12 * (octave + 1));
-            notes[1] = findThird(root, q) + (12 * (octave + 1));
-            notes[2] = findFifth(root, q) + (12 * (octave + 1));
-            var noteAndTime;
-            console.log("root = " + notes[0]);
-            console.log("third = " + notes[1]);
-            console.log("fifth = " + notes[2]);
-            //
-            console.log('asdf');
-            for (var i = 0; i < 3; i++) {
-                noteAndTime = {
-                    note: Tone.Frequency(notes[i], "midi").toNote(),
-                    beats: lastTime,
-                    dur: noteDuration,
-                    inst: instrumentList.indexOf(currentInst)
-                };
-                //                console.log(noteAndTime.note + " = note");
+            if (loaded) {
+                var root = noteToNum(r);
+                var notes = [];
+                notes[0] = root + (12 * (octave + 1));
+                notes[1] = findThird(root, q) + (12 * (octave + 1));
+                notes[2] = findFifth(root, q) + (12 * (octave + 1));
+                var noteAndTime;
+                console.log("root = " + notes[0]);
+                console.log("third = " + notes[1]);
+                console.log("fifth = " + notes[2]);
+                //
+                console.log('asdf');
+                for (var i = 0; i < 3; i++) {
+                    noteAndTime = {
+                        note: Tone.Frequency(notes[i], "midi").toNote(),
+                        beats: lastTime,
+                        dur: noteDuration,
+                        inst: instrumentList.indexOf(currentInst)
+                    };
+                    //                console.log(noteAndTime.note + " = note");
 
-                sched.push(noteAndTime);
-                //                console.log(noteAndTime.note);
-            }
-            lastTime += b;
-            console.log("last time at method = " + lastTime);
-            totalNotes += 3;
-
-
-
+                    sched.push(noteAndTime);
+                    //                console.log(noteAndTime.note);
+                }
+                lastTime += b;
+                console.log("last time at method = " + lastTime);
+                totalNotes += 3;
+            } else alert("Not so fast eager McBeaver!");
         };
 
 
@@ -481,34 +461,36 @@
 
 
         ext.playNote = function (n) {
+            if (loaded) {
+                noteAndTime = {
+                    note: n + "" + octave,
+                    beats: lastTime,
+                    dur: noteDuration,
+                    inst: instrumentList.indexOf(currentInst)
+                };
 
-            noteAndTime = {
-                note: n + "" + octave,
-                beats: lastTime,
-                dur: noteDuration,
-                inst: instrumentList.indexOf(currentInst)
-            };
 
-
-            sched.push(noteAndTime);
-            totalNotes++;
+                sched.push(noteAndTime);
+                totalNotes++;
+            } else alert("Not so fast eager McBeaver!");
         };
 
 
         ext.playNoteForBeats = function (n, beats) {
+            if (loaded) {
+                noteAndTime = {
+                    note: n + "" + octave,
+                    beats: lastTime,
+                    dur: noteDuration,
+                    inst: instrumentList.indexOf(currentInst)
+                };
 
-            noteAndTime = {
-                note: n + "" + octave,
-                beats: lastTime,
-                dur: noteDuration,
-                inst: instrumentList.indexOf(currentInst)
-            };
-
-            sched.push(noteAndTime);
-            lastTime += (beats);
-            totalNotes++;
-            console.log('inst = ' + noteAndTime.inst);
-            console.log(noteAndTime.dur + ' = duration');
+                sched.push(noteAndTime);
+                lastTime += (beats);
+                totalNotes++;
+                console.log('inst = ' + noteAndTime.inst);
+                console.log(noteAndTime.dur + ' = duration');
+            } else alert("Not so fast eager McBeaver!");
 
         };
 
