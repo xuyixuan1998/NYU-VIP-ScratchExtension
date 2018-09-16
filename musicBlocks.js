@@ -154,7 +154,7 @@
   "xylophone"
 ];
         console.log('url = ' + baseUrl + currentInst + "-mp3/" + "C1.mp3");
-
+        console.log("index is "+instrumentList.indexOf('acoustic_bass'));
         function loadSamples() {
             sampler = new Tone.Sampler({
                 "C1": baseUrl + currentInst + "-mp3/" + "C1.mp3",
@@ -491,13 +491,14 @@
 
             noteAndTime = {
                 note: n + "" + octave,
-                beats: lastTime
+                beats: lastTime,
+                inst: instrumentList.indexOf(currentInst)
             };
 
             sched.push(noteAndTime);
             lastTime += (beats);
             totalNotes++;
-            console.log('total notes = ' + totalNotes);
+            console.log('inst = ' + noteAndTime.inst);
             console.log(lastTime + ' = last time');
 
         };
@@ -540,11 +541,11 @@
         ext.newSound = function (s) {
             currentInst = s;
             console.log("new inst = " + currentInst);
-            loadSamples();
+            
 
 
         }
-        //
+        
         ext.speakerOut = function () {
             Tone.Transport.start();
 
@@ -563,7 +564,7 @@
                 console.log(sched[i].note + 'note');
                 console.log(time + '=time');
                 console.log(sched);
-                sampler.triggerAttackRelease(sched[i].note, noteDuration, time);
+                samplers[sched[i].inst].triggerAttackRelease(sched[i].note, noteDuration, time);
                 //                inst2.triggerAttackRelease('C4','4n','0:0:0');
                 //                inst2.triggerAttackRelease('D4','4n','0:1:0');
                 //                inst2.triggerAttackRelease('C4','4n','0:2:0');
@@ -605,7 +606,7 @@
                 [' ', '🔊instrument 1 out🔊', 'speakerOut'],
                 [' ', 'set octave to %n', 'setOctave', 4],
                 [' ', 'set duration %m.beatval ', 'setDuration', '1/4 note'],
-                ['w', 'load new sound %m.sounds', 'newSound', 'acoustic_grand_piano']
+                [' ', 'load new sound %m.sounds', 'newSound', 'acoustic_grand_piano']
             ],
             menus: {
                 beatval: ['1/2 note', '1/4 note', '1/8 note', '1/16 note '],
