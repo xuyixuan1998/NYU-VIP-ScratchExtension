@@ -154,7 +154,8 @@
   "xylophone"
 ];
         console.log('url = ' + baseUrl + currentInst + "-mp3/" + "C1.mp3");
-        console.log("index is "+instrumentList.indexOf('acoustic_bass'));
+        console.log("index is " + instrumentList.indexOf('acoustic_bass'));
+
         function loadSamples() {
             sampler = new Tone.Sampler({
                 "C1": baseUrl + currentInst + "-mp3/" + "C1.mp3",
@@ -492,6 +493,7 @@
             noteAndTime = {
                 note: n + "" + octave,
                 beats: lastTime,
+                dur: noteDuration,
                 inst: instrumentList.indexOf(currentInst)
             };
 
@@ -499,7 +501,7 @@
             lastTime += (beats);
             totalNotes++;
             console.log('inst = ' + noteAndTime.inst);
-            console.log(lastTime + ' = last time');
+            console.log(noteAndTime.dur + ' = duration');
 
         };
 
@@ -522,30 +524,25 @@
         };
 
         ext.setDuration = function (v) {
-            switch (v) {
-                case '1/2 note':
-                    noteDuration = '2n';
-                    break;
-                case '1/4 note':
-                    noteDuration = '4n';
-                    break;
-                case '1/8 note':
-                    noteDuration = '8n'
-                    break;
-                case '1/16 note':
-                    noteDuration = '16n';
-                    break;
-            }
+            console.log('v = ', v);
+            if (v === '1/2 note')
+                noteDuration = '2n';
+            else if (v === '1/4 note')
+                noteDuration = '4n';
+            else if (v === '1/8 note')
+                noteDuration = '8n'
+            else if (v === '1/16 note')
+                noteDuration = '16n';
+
+            else console.log('well now what');
+            console.log('new duration is ' + noteDuration);
         };
 
         ext.newSound = function (s) {
             currentInst = s;
             console.log("new inst = " + currentInst);
-            
-
-
         }
-        
+
         ext.speakerOut = function () {
             Tone.Transport.start();
 
@@ -555,16 +552,15 @@
             } else Tone.Transport.loop = false;
 
 
-            console.log(totalNotes);
             var time;
             inst2.volume.value = -6;
             for (var i = 0; i < totalNotes; i++) {
 
                 time = convertBeat(sched[i].beats)
-                console.log(sched[i].note + 'note');
-                console.log(time + '=time');
-                console.log(sched);
-                samplers[sched[i].inst].triggerAttackRelease(sched[i].note, noteDuration, time);
+                //                console.log(sched[i].note + 'note');
+                //                console.log(time + '=time');
+                //                console.log(sched);
+                samplers[sched[i].inst].triggerAttackRelease(sched[i].note, sched[i].dur, time);
                 //                inst2.triggerAttackRelease('C4','4n','0:0:0');
                 //                inst2.triggerAttackRelease('D4','4n','0:1:0');
                 //                inst2.triggerAttackRelease('C4','4n','0:2:0');
@@ -576,9 +572,9 @@
 
             }
 
+            //
 
-
-            console.log(convertBeat(lastTime));
+            //            console.log(convertBeat(lastTime));
 
             if (loop == false) {
                 Tone.Transport.schedule(function (time) {
@@ -605,11 +601,11 @@
                 [' ', 'set loop off', 'loopOff'],
                 [' ', '🔊instrument 1 out🔊', 'speakerOut'],
                 [' ', 'set octave to %n', 'setOctave', 4],
-                [' ', 'set duration %m.beatval ', 'setDuration', '1/4 note'],
+                [' ', 'set duration %m.beatval ', 'setDuration', ''],
                 [' ', 'load new sound %m.sounds', 'newSound', 'acoustic_grand_piano']
             ],
             menus: {
-                beatval: ['1/2 note', '1/4 note', '1/8 note', '1/16 note '],
+                beatval: ['1/2 note', '1/4 note', '1/8 note', '1/16 note'],
                 qualities: ['major', 'minor', 'diminished', 'augmented'],
                 sounds: instrumentList
             }
