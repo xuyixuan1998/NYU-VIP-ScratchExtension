@@ -4,6 +4,7 @@
     function start() {
         var loaded = false;
         var sampler;
+        var isFirst = false;
         var lastTime = 0;
         var loop = false;
         var totalNotes = 0;
@@ -236,30 +237,22 @@
                 "Bb4": baseUrl + instrumentList[i] + "-mp3/" + "Bb4.mp3",
                 "B4": baseUrl + instrumentList[i] + "-mp3/" + "B4.mp3",
 
-//                "C5": baseUrl + instrumentList[i] + "-mp3/" + "C5.mp3",
-//                "Db5": baseUrl + instrumentList[i] + "-mp3/" + "Db5.mp3",
-//                "D5": baseUrl + instrumentList[i] + "-mp3/" + "D5.mp3",
-//                "Eb5": baseUrl + instrumentList[i] + "-mp3/" + "Eb5.mp3",
-//                "E5": baseUrl + instrumentList[i] + "-mp3/" + "E5.mp3",
-//                "F5": baseUrl + instrumentList[i] + "-mp3/" + "F5.mp3",
-//                "Gb5": baseUrl + instrumentList[i] + "-mp3/" + "Gb5.mp3",
-//                "G5": baseUrl + instrumentList[i] + "-mp3/" + "G5.mp3",
-//                "Ab5": baseUrl + instrumentList[i] + "-mp3/" + "Ab5.mp3",
-//                "A5": baseUrl + instrumentList[i] + "-mp3/" + "A5.mp3",
-//                "Bb5": baseUrl + instrumentList[i] + "-mp3/" + "Bb5.mp3",
-//                "B5": baseUrl + instrumentList[i] + "-mp3/" + "B5.mp3"
+                //                "C5": baseUrl + instrumentList[i] + "-mp3/" + "C5.mp3",
+                //                "Db5": baseUrl + instrumentList[i] + "-mp3/" + "Db5.mp3",
+                //                "D5": baseUrl + instrumentList[i] + "-mp3/" + "D5.mp3",
+                //                "Eb5": baseUrl + instrumentList[i] + "-mp3/" + "Eb5.mp3",
+                //                "E5": baseUrl + instrumentList[i] + "-mp3/" + "E5.mp3",
+                //                "F5": baseUrl + instrumentList[i] + "-mp3/" + "F5.mp3",
+                //                "Gb5": baseUrl + instrumentList[i] + "-mp3/" + "Gb5.mp3",
+                //                "G5": baseUrl + instrumentList[i] + "-mp3/" + "G5.mp3",
+                //                "Ab5": baseUrl + instrumentList[i] + "-mp3/" + "Ab5.mp3",
+                //                "A5": baseUrl + instrumentList[i] + "-mp3/" + "A5.mp3",
+                //                "Bb5": baseUrl + instrumentList[i] + "-mp3/" + "Bb5.mp3",
+                //                "B5": baseUrl + instrumentList[i] + "-mp3/" + "B5.mp3"
 
 
             }))
         }
-
-
-
-
-
-
-
-//        alert("One sec, loading your instruments!");
 
 
         Tone.Buffer.on('load', function () {
@@ -274,9 +267,7 @@
 
         Tone.Buffer.on('progress', function () {})
 
-        Tone.Buffer.on('error', function () {
-//            console.log('error');
-        })
+        Tone.Buffer.on('error', function () {})
 
 
         var notesAndNums = {
@@ -356,7 +347,6 @@
         }
 
         function findThird(root, q) {
-            console.log(q + "quality");
             var mod;
             if (q == ("major")) {
                 mod = 0;
@@ -389,6 +379,10 @@
         }
 
         ext.playChord = function (r, q) {
+            if (!isFirst) {
+                clear();
+                isFirst = true;
+            }
             if (loaded) {
                 var root = noteToNum(r);
                 var notes = [];
@@ -404,18 +398,19 @@
                         dur: noteDuration,
                         inst: instrumentList.indexOf(currentInst)
                     };
-                    console.log(noteAndTime.note + " = note");
 
                     sched.push(noteAndTime);
-                    console.log(noteAndTime.note);
                 }
-                console.log("last time at method = " + lastTime);
                 totalNotes += 3;
             } else alert("Not so fast eager McBeaver!");
 
         };
 
         ext.playChordForBeats = function (r, q, b) {
+            if (!isFirst) {
+                clear();
+                isFirst = true;
+            }
             if (loaded) {
                 var root = noteToNum(r);
                 var notes = [];
@@ -423,11 +418,7 @@
                 notes[1] = findThird(root, q) + (12 * (octave + 1));
                 notes[2] = findFifth(root, q) + (12 * (octave + 1));
                 var noteAndTime;
-                console.log("root = " + notes[0]);
-                console.log("third = " + notes[1]);
-                console.log("fifth = " + notes[2]);
-                //
-                console.log('asdf');
+
                 for (var i = 0; i < 3; i++) {
                     noteAndTime = {
                         note: Tone.Frequency(notes[i], "midi").toNote(),
@@ -435,13 +426,9 @@
                         dur: noteDuration,
                         inst: instrumentList.indexOf(currentInst)
                     };
-                    //                console.log(noteAndTime.note + " = note");
-
                     sched.push(noteAndTime);
-                    //                console.log(noteAndTime.note);
                 }
                 lastTime += b;
-                console.log("last time at method = " + lastTime);
                 totalNotes += 3;
             } else alert("Not so fast eager McBeaver!");
         };
@@ -461,6 +448,10 @@
 
 
         ext.playNote = function (n) {
+            if (!isFirst) {
+                clear();
+                isFirst = true;
+            }
             if (loaded) {
                 noteAndTime = {
                     note: n + "" + octave,
@@ -477,6 +468,10 @@
 
 
         ext.playNoteForBeats = function (n, beats) {
+            if (!isFirst) {
+                clear();
+                isFirst = true;
+            }
             if (loaded) {
                 noteAndTime = {
                     note: n + "" + octave,
@@ -488,21 +483,17 @@
                 sched.push(noteAndTime);
                 lastTime += (beats);
                 totalNotes++;
-                console.log('inst = ' + noteAndTime.inst);
-                console.log(noteAndTime.dur + ' = duration');
             } else alert("Not so fast eager McBeaver!");
 
         };
 
         ext.loopOn = function () {
             loop = true;
-            console.log("loop is on");
         };
 
         ext.loopOff = function () {
             loop = false;
             sched = [];
-            console.log("loop is off");
             Tone.Transport.loop = false;
             Tone.Transport.stop();
             Tone.Transport.cancel();
@@ -513,7 +504,6 @@
         };
 
         ext.setDuration = function (v) {
-            console.log('v = ', v);
             if (v === '1/2 note')
                 noteDuration = '2n';
             else if (v === '1/4 note')
@@ -523,19 +513,22 @@
             else if (v === '1/16 note')
                 noteDuration = '16n';
 
-            else console.log('well now what');
-            console.log('new duration is ' + noteDuration);
         };
 
         ext.newSound = function (s) {
             currentInst = s;
-            console.log("new inst = " + currentInst);
         }
 
+        function clear() {
+            totalNotes = 0;
+            sched = [];
+            lastTime = 0;
+            Tone.Transport.stop();
+            Tone.Transport.cancel();
+        }
         ext.clearNotes = function () {
             totalNotes = 0;
             sched = [];
-            console.log('reset: ' + lastTime);
             lastTime = 0;
             Tone.Transport.stop();
             Tone.Transport.cancel();
@@ -544,18 +537,17 @@
 
 
         ext.speakerOut = function () {
+            isFirst = false;
             Tone.Transport.start();
-            if (lastTime%4 == 0){
-                maxMeasure = lastTime/4;
+            if (lastTime % 4 == 0) {
+                maxMeasure = lastTime / 4;
+            } else {
+                maxMeasure = (Math.floor(lastTime / 4) + 1);
             }
-            else {
-                maxMeasure = (Math.floor(lastTime/4)+1);
-            }
-            
-            console.log('max measure = '+maxMeasure);
-            
-            
-            Tone.Transport.setLoopPoints(0, maxMeasure+'m');
+
+
+
+            Tone.Transport.setLoopPoints(0, maxMeasure + 'm');
             if (loop == true) {
                 Tone.Transport.loop = true;
             } else Tone.Transport.loop = false;
@@ -574,7 +566,6 @@
                 Tone.Transport.schedule(function (time) {
                     totalNotes = 0;
                     sched = [];
-                    console.log('reset: ' + lastTime);
                     lastTime = 0;
                     Tone.Transport.stop();
                     Tone.Transport.cancel();
