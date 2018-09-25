@@ -2,6 +2,33 @@ Prototype Scratch Music Blocks
 
 Project Focus:
 
+Goals:
+
+1. More sounds: Load Sound-font library & play notes
+	Global Variables: Root, Tempo, Mode/Scale, Instrument (local to Sprite)
+	Chunk instruments into families (e.g. woodwinds, brass, etc.).
+2. Open GroovePizza as a block (lauching external URLs)
+3. play sequences of sound (pitches/rhythms)
+4. Josh's audio blocks: delay, reverb, filters, 
+5. Sampler audio record and playback
+
+
+Audiences:
+
+1. Kids as exploration
+2. Kids with parent/teacher support
+3. For teachers
+
+
+For Kids:
+
+Pitches: letter names, 
+	C4
+	60
+	1, 2, 3, 4, -1, -5, -5, -4, 
+
+
+
 JS Extension that allows people to open groove pizza, use it, and then import sound. (scratch 2.0) *Launch groove pizza button*
 
 Accordion Extension: Block - When sprite is clicked it asks for name to make it dance. Each letter is a different note. We would use the spotify extension toooo……
